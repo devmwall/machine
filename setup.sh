@@ -86,9 +86,10 @@ echo "Source: $DEV_ENV/.config/keyboard/"
 echo "Destination: $ORIGINAL_HOME/.config/keyboard/"
 cp -a "$DEV_ENV/env/.config/keyboard/." "$ORIGINAL_HOME/.config/keyboard/"
 
-setxkbmap -layout $(setxkbmap -query | awk '/layout:/ {print $2}') -option ""
 
-cp -a "$DEV_ENV/env/.local" "$ORIGINAL_HOME/.local"
+cp -a "$DEV_ENV/env/.local/." "$ORIGINAL_HOME/.local"
+
+chmod +x $ORIGINAL_HOME/.local/scripts/hdmi
 
 # Ensure correct ownership
 chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/i3"

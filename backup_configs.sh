@@ -2,7 +2,7 @@
 
 # Preserve the original user's home directory when running with sudo
 ORIGINAL_USER=$(logname)
-ORIGINAL_HOME=$(eval echo ~$ORIGINAL_USER)
+ORIGINAL_HOME="/home/$ORIGINAL_USER"
 DEV_ENV="$ORIGINAL_HOME/dev/machine"
 
 echo "Debug: Running backup for user $ORIGINAL_USER"
@@ -29,14 +29,14 @@ mkdir -p "$DEV_ENV/env/.config/nvim"
 mkdir -p "$DEV_ENV/env/.config/vscode"
 
 # Backup i3 config
-cp "$HOME/.config/i3/config" "$DEV_ENV/env/.config/i3/config"
+cp "$ORIGINAL_HOME/.config/i3/config" "$DEV_ENV/env/.config/i3/config"
 
 # Backup Neovim config
-cp "$HOME/.config/nvim/init.lua" "$DEV_ENV/env/.config/nvim/init.lua"
+cp "$ORIGINAL_HOME/.config/nvim/init.lua" "$DEV_ENV/env/.config/nvim/init.lua"
 
 # Backup VSCode settings
-cp "$HOME/.config/Code/User/settings.json" "$DEV_ENV/env/.config/vscode/settings.json"
-cp "$HOME/.config/Code/User/keybindings.json" "$DEV_ENV/env/.config/vscode/keybindings.json"
+cp "$ORIGINAL_HOME/.config/Code/User/settings.json" "$DEV_ENV/env/.config/vscode/settings.json"
+cp "$ORIGINAL_HOME/.config/Code/User/keybindings.json" "$DEV_ENV/env/.config/vscode/keybindings.json"
 
 echo "Configs backed up successfully to $DEV_ENV/env/.config!"
 EOF

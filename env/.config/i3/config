@@ -212,6 +212,8 @@ bar {
 # CUSTOM KEYS START
 # ------------------------------------------
 exec --no-startup-id nm-applet
+exec --no-startup-id setxkbmap -option "caps:escape"
+exec --no-startup-id setxkbmap -option "shift:both_capslock"
 
 # FKeys
 # Pulse Audio controls

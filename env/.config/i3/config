@@ -211,8 +211,8 @@ bar {
 # ------------------------------------------
 # CUSTOM KEYS START
 # ------------------------------------------
-exec_always --no-startup-id sleep 0 && setxkbmap -option "caps:escape"
-exec_always --no-startup-id sleep 0 && setxkbmap -option "shift:both_capslock"
+exec_always --no-startup-id sleep 1 && setxkbmap -option "caps:escape"
+exec_always --no-startup-id sleep 1 && setxkbmap -option "shift:both_capslock"
 exec_always --no-startup-id sleep 0 && "$HOME/.local/scripts/hdmi"
 
 

@@ -38,7 +38,7 @@ floating_modifier $mod
 
 # start a terminal
 # bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec "$HOME/.local/bin/ghostty"
+bindsym $mod+Return exec "/bin/ghostty"
 
 # kill focused window
 # bindsym $mod+space exec "/home/theprimeagen/dotfiles/awesome-streamerrc/ThePrimeagen/tmux2"
@@ -211,9 +211,10 @@ bar {
 # ------------------------------------------
 # CUSTOM KEYS START
 # ------------------------------------------
-exec --no-startup-id nm-applet
-exec --no-startup-id setxkbmap -option "caps:escape"
-exec --no-startup-id setxkbmap -option "shift:both_capslock"
+exec_always --no-startup-id sleep 0 && setxkbmap -option "caps:escape"
+exec_always --no-startup-id sleep 0 && setxkbmap -option "shift:both_capslock"
+#exec --no-startup-id nm-applet
+
 
 # FKeys
 # Pulse Audio controls

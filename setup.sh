@@ -30,7 +30,12 @@ dnf install -y \
     gimp \
     python3 \
     python3-pip \
-    NetworkManager-tui
+    NetworkManager-tui \
+    rofi
+
+dnf copr enable pgdev/ghostty
+dnf install ghostty
+
 
 # Visual Studio Code (VSCode) installation
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
@@ -41,6 +46,7 @@ dnf install -y code
 mkdir -p "$ORIGINAL_HOME/.config/i3"
 mkdir -p "$ORIGINAL_HOME/.config/nvim"
 mkdir -p "$ORIGINAL_HOME/.config/Code/User"
+mkdir -p "$ORIGINAL_HOME/.config/ghostty/"
 
 # Copy configuration files with debug output
 echo "Copying i3 config:"
@@ -63,9 +69,15 @@ echo "Source: $DEV_ENV/env/.config/vscode/keybindings.json"
 echo "Destination: $ORIGINAL_HOME/.config/Code/User/keybindings.json"
 cp "$DEV_ENV/env/.config/vscode/keybindings.json" "$ORIGINAL_HOME/.config/Code/User/keybindings.json"
 
+echo "Copying Ghostty config:"
+echo "Source: $DEV_ENV/env/.config/ghostty/config"
+echo "Destination: $ORIGINAL_HOME/.config/ghostty/config"
+cp "$DEV_ENV/env/.config/ghostty/config" "$ORIGINAL_HOME/.config/ghostty/config"
+
 # Ensure correct ownership
 chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/i3"
 chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/nvim"
 chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/Code"
+chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/config"
 
 echo "Setup complete!"

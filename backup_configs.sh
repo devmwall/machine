@@ -27,6 +27,7 @@ fi
 mkdir -p "$DEV_ENV/env/.config/i3"
 mkdir -p "$DEV_ENV/env/.config/nvim"
 mkdir -p "$DEV_ENV/env/.config/vscode"
+mkdir -p "$DEV_ENV/env/.config/ghostty"
 
 # Backup i3 config
 cp "$ORIGINAL_HOME/.config/i3/config" "$DEV_ENV/env/.config/i3/config"
@@ -37,6 +38,9 @@ cp "$ORIGINAL_HOME/.config/nvim/init.lua" "$DEV_ENV/env/.config/nvim/init.lua"
 # Backup VSCode settings
 cp "$ORIGINAL_HOME/.config/Code/User/settings.json" "$DEV_ENV/env/.config/vscode/settings.json"
 cp "$ORIGINAL_HOME/.config/Code/User/keybindings.json" "$DEV_ENV/env/.config/vscode/keybindings.json"
+
+# Backup VSCode settings
+cp "$ORIGINAL_HOME/.config/ghostty/config" "$DEV_ENV/env/.config/ghostty/config"
 
 echo "Configs backed up successfully to $DEV_ENV/env/.config!"
 EOF

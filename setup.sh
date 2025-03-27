@@ -32,7 +32,8 @@ dnf install -y \
     python3-pip \
     NetworkManager-tui \
     rofi \
-    xrandr
+    xrandr \
+    nm-applet
 
 dnf copr enable pgdev/ghostty
 dnf install ghostty

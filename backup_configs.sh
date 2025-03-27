@@ -42,5 +42,9 @@ cp "$ORIGINAL_HOME/.config/Code/User/keybindings.json" "$DEV_ENV/env/.config/vsc
 # Backup VSCode settings
 cp "$ORIGINAL_HOME/.config/ghostty/config" "$DEV_ENV/env/.config/ghostty/config"
 
+#Backup env config
+cp -a "$ORIGINAL_HOME/.config/keyboard/." "$DEV_ENV/env/.config/keyboard/"
+
+
 echo "Configs backed up successfully to $DEV_ENV/env/.config!"
 EOF

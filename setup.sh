@@ -35,6 +35,8 @@ dnf install -y \
     xrandr \
     nm-applet
 
+flatpak install flathub md.obsidian.Obsidian
+
 dnf copr enable pgdev/ghostty
 dnf install ghostty
 

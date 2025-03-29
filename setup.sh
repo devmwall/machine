@@ -38,6 +38,10 @@ dnf install -y \
     pgadmin4
 
 flatpak install flathub md.obsidian.Obsidian
+flatpak install org.pgadmin.pgadmin4
+
+ln -s /var/lib/flatpak/exports/bin/md.obsidian.Obsidian /usr/bin/Obsidian
+ln -s /var/lib/flatpak/exports/bin/org.pgadmin.pgadmin4 /usr/bin/pgadmin4
 
 dnf copr enable pgdev/ghostty
 dnf install ghostty

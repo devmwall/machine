@@ -33,7 +33,8 @@ dnf install -y \
     NetworkManager-tui \
     rofi \
     xrandr \
-    nm-applet
+    nm-applet \
+    brightnessctl
 
 flatpak install flathub md.obsidian.Obsidian
 

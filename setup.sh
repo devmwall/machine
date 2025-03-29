@@ -34,7 +34,8 @@ dnf install -y \
     rofi \
     xrandr \
     nm-applet \
-    brightnessctl
+    brightnessctl \
+    pgadmin4
 
 flatpak install flathub md.obsidian.Obsidian
 

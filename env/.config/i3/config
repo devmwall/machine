@@ -219,7 +219,9 @@ exec_always --no-startup-id sleep 0 && "$HOME/.local/scripts/hdmi"
 exec --no-startup-id nm-applet
 exec --no-startup-id i3-msg 'workspace 1; exec /bin/firefox'
 exec --no-startup-id i3-msg 'workspace 3; exec /bin/ghostty; exec /bin/ghostty;'
-exec --no-startup-id i3-msg 'workspace 5; exec flatpak run md.obsidian.Obsidian;'
+exec --no-startup-id i3-msg 'workspace 2; exec /bin/code;'
+
+#exec --no-startup-id i3-msg 'workspace 5; exec flatpak run md.obsidian.Obsidian;'
 
 # FKeys
 # Pulse Audio controls

@@ -35,10 +35,19 @@ dnf install -y \
     xrandr \
     nm-applet \
     brightnessctl \
-    pgadmin4
+    pgadmin4 \
+    ripgrep \
+    lua \
+    luarocks \
+    go
 
 flatpak install flathub md.obsidian.Obsidian
 flatpak install org.pgadmin.pgadmin4
+
+wget --output-document /tmp/luarocks.tar.gz https://luarocks.org/releases/luarocks-3.11.0.tar.gz
+tar zxpf /tmp/luarocks.tar.gz -C /tmp
+cd /tmp/luarocks-3.11.0
+./configure && make && sudo make install
 
 ln -s /var/lib/flatpak/exports/bin/md.obsidian.Obsidian /usr/bin/Obsidian
 ln -s /var/lib/flatpak/exports/bin/org.pgadmin.pgadmin4 /usr/bin/pgadmin4
@@ -71,9 +80,9 @@ echo "Destination: $ORIGINAL_HOME/.config/i3/config"
 cp "$DEV_ENV/env/.config/i3/config" "$ORIGINAL_HOME/.config/i3/config"
 
 echo "Copying neovim config:"
-echo "Source: $DEV_ENV/env/.config/nvim/init.lua"
-echo "Destination: $ORIGINAL_HOME/.config/nvim/init.lua"
-cp "$DEV_ENV/env/.config/nvim/init.lua" "$ORIGINAL_HOME/.config/nvim/init.lua"
+echo "Source: $DEV_ENV/env/.config/nvim/."
+echo "Destination: $ORIGINAL_HOME/.config/nvim/"
+cp -a "$DEV_ENV/env/.config/nvim/." "$ORIGINAL_HOME/.config/nvim/"
 
 echo "Copying VSCode settings:"
 echo "Source: $DEV_ENV/env/.config/vscode/settings.json"

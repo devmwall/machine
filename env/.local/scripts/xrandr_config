@@ -1,0 +1,3 @@
+xrandr --output DP-2 --mode 1920x1080 --rotate left \
+--output HDMI-1 --mode 1920x1080 --right-of DP-2 --rotate normal \
+--output eDP-1 --primary --mode 1920x1080 --rotate normal --right-of HDMI-1

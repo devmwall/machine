@@ -31,6 +31,9 @@ sudo pacman -S ghostty
 sudo pacman -S hyprpaper
 paru -Syu wlogout-git --noconfirm --needed
 sudo pacman -S code
+sudo pacman -S --noconfirm neovim lua51 luarocks
+sudo pacman -S swww pywal wofi fd
+sudo pacman -S networkmanager pavucontrol
 
 
 flatpak install flathub md.obsidian.Obsidian
@@ -72,6 +75,7 @@ echo "Source: $DEV_ENV/env/.config/nvim/."
 echo "Destination: $ORIGINAL_HOME/.config/nvim/"
 cp -a "$DEV_ENV/env/.config/nvim/." "$ORIGINAL_HOME/.config/nvim/"
 cp -a "$DEV_ENV/env/.config/hypr/." "$ORIGINAL_HOME/.config/hypr/"
+cp -a "$DEV_ENV/env/.config/wal/." "$ORIGINAL_HOME/.config/wal/"
 
 echo "Copying VSCode settings:"
 echo "Source: $DEV_ENV/env/.config/vscode/settings.json"
@@ -92,6 +96,8 @@ echo "Copying Keyboard config:"
 echo "Source: $DEV_ENV/.config/keyboard/"
 echo "Destination: $ORIGINAL_HOME/.config/keyboard/"
 cp -a "$DEV_ENV/env/.config/keyboard/." "$ORIGINAL_HOME/.config/keyboard/"
+cp -a "$DEV_ENV/env/.config/waybar/." "$ORIGINAL_HOME/.config/waybar/"
+cp -a "$DEV_ENV/env/.config/wal/." "$ORIGINAL_HOME/.config/wal/"
 
 
 cp -a "$DEV_ENV/env/.local/." "$ORIGINAL_HOME/.local"

@@ -6,7 +6,7 @@
 
     "modules-left": ["hyprland/workspaces", "memory", "temperature"],
     "modules-center": ["clock"],
-    "modules-right": ["battery", "volume", "backlight", "network", "bluetooth", "tray"],
+    "modules-right": ["battery", "wireplumber", "backlight", "network", "bluetooth", "tray"],
 
     "hyprland/workspaces": {
         "format": "<span size='larger'>{icon}</span>",
@@ -37,10 +37,11 @@
     },
 
     "battery": {
-        "bat": "BAT1",
+        "bat": "BAT0",
         "interval": 60,
         "format": "{icon}  {capacity}%",
-        "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"],
+        "format-charging": "<span font='Font Awesome 5 Free'></span>  <span font='Font Awesome 5 Free 11'>{icon}</span>  {capacity}% - {time}",        "format-plugged": "{icon}  {capacity}%",
+        "format-icons": ["\uf244", "\uf243", "\uf242", "\uf241", "\uf240"]
     },
 
     "backlight": {

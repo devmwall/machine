@@ -23,39 +23,6 @@ fi
 # Install core packages
 #!/usr/bin/env bash
 
-sudo pacman -S --noconfirm --needed gimp tldr go fzf rofi-wayland
-sudo pacman -S love --noconfirm --needed
-sudo pacman -S ttf-font-awesome waybar ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols
-sudo pacman -S hyprlock --noconfirm --needed
-sudo pacman -S ghostty
-sudo pacman -S hyprpaper linux-firmware sof-firmware 
-paru -Syu wlogout-git --noconfirm --needed
-sudo pacman -S code
-sudo pacman -S --noconfirm neovim lua51 luarocks
-sudo pacman -S swww pywal wofi fd
-sudo pacman -S networkmanager pavucontrol
-sudo pacman -S pipewire wireplumber brightnessctl
-sudo pacman -S pipewire pipewire-pulse pipewire-alsa
-
-flatpak install flathub md.obsidian.Obsidian
-flatpak install org.pgadmin.pgadmin4
-
-wget --output-document /tmp/luarocks.tar.gz https://luarocks.org/releases/luarocks-3.11.0.tar.gz
-tar zxpf /tmp/luarocks.tar.gz -C /tmp
-cd /tmp/luarocks-3.11.0
-./configure && make && sudo make install
-
-ln -s /var/lib/flatpak/exports/bin/md.obsidian.Obsidian /usr/bin/Obsidian
-ln -s /var/lib/flatpak/exports/bin/org.pgadmin.pgadmin4 /usr/bin/pgadmin4
-
-git config --global user.email "me@mattwall.dev"
-git config --global user.name "devmwall"
-
-
-# Visual Studio Code (VSCode) installation
-rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-
 # Create configuration directories
 mkdir -p "$ORIGINAL_HOME/.config/i3"
 mkdir -p "$ORIGINAL_HOME/.config/nvim"

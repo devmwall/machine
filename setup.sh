@@ -14,9 +14,9 @@ echo "Debug: Using HOME path: $ORIGINAL_HOME"
 
 # Verify DEV_ENV is a valid directory
 if [ ! -d "$DEV_ENV" ]; then
-    echo "Error: DEV_ENV directory does not exist."
-    echo "Attempted directory: $DEV_ENV"
-    exit 1
+  echo "Error: DEV_ENV directory does not exist."
+  echo "Attempted directory: $DEV_ENV"
+  exit 1
 fi
 
 # Update system
@@ -28,7 +28,7 @@ sudo pacman -S love --noconfirm --needed
 sudo pacman -S ttf-font-awesome waybar ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols
 sudo pacman -S hyprlock --noconfirm --needed
 sudo pacman -S ghostty
-sudo pacman -S hyprpaper linux-firmware sof-firmware 
+sudo pacman -S hyprpaper linux-firmware sof-firmware
 paru -Syu wlogout-git --noconfirm --needed
 sudo pacman -S code
 sudo pacman -S --noconfirm neovim lua51 luarocks
@@ -36,6 +36,7 @@ sudo pacman -S swww pywal wofi fd
 sudo pacman -S networkmanager pavucontrol
 sudo pacman -S pipewire wireplumber brightnessctl
 sudo pacman -S pipewire pipewire-pulse pipewire-alsa
+sudo pacman -S keyd
 
 flatpak install flathub md.obsidian.Obsidian
 flatpak install org.pgadmin.pgadmin4
@@ -51,7 +52,6 @@ ln -s /var/lib/flatpak/exports/bin/org.pgadmin.pgadmin4 /usr/bin/pgadmin4
 git config --global user.email "me@mattwall.dev"
 git config --global user.name "devmwall"
 
-
 # Visual Studio Code (VSCode) installation
 rpm --import https://packages.microsoft.com/keys/microsoft.asc
 sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
@@ -63,7 +63,6 @@ mkdir -p "$ORIGINAL_HOME/.config/Code/User"
 mkdir -p "$ORIGINAL_HOME/.config/ghostty/"
 mkdir -p "$ORIGINAL_HOME/.config/keyboard/"
 mkdir -p "$ORIGINAL_HOME/.config/hypr/"
-
 
 # Copy configuration files with debug output
 echo "Copying i3 config:"
@@ -99,7 +98,6 @@ echo "Destination: $ORIGINAL_HOME/.config/keyboard/"
 cp -a "$DEV_ENV/env/.config/keyboard/." "$ORIGINAL_HOME/.config/keyboard/"
 cp -a "$DEV_ENV/env/.config/waybar/." "$ORIGINAL_HOME/.config/waybar/"
 cp -a "$DEV_ENV/env/.config/wal/." "$ORIGINAL_HOME/.config/wal/"
-
 
 cp -a "$DEV_ENV/env/.local/." "$ORIGINAL_HOME/.local"
 

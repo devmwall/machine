@@ -38,6 +38,7 @@ sudo pacman -S pipewire wireplumber brightnessctl
 sudo pacman -S pipewire pipewire-pulse pipewire-alsa
 sudo pacman -S keyd
 sudo pacman -S openssh
+sudo pacman -S spotify-launcher
 
 flatpak install flathub md.obsidian.Obsidian
 flatpak install org.pgadmin.pgadmin4

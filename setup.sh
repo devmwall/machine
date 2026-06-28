@@ -1,115 +1,93 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Main setup script: setup.sh
-#!/bin/bash
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_USER="${SUDO_USER:-$USER}"
+TARGET_HOME="$(getent passwd "$TARGET_USER" | cut -d: -f6)"
 
-# Preserve the original user's home directory when running with sudo
-ORIGINAL_USER=$(logname)
-ORIGINAL_HOME="/home/$ORIGINAL_USER"
-DEV_ENV="$ORIGINAL_HOME/dev/machine"
-
-echo "Debug: Running setup for user $ORIGINAL_USER"
-echo "Debug: Using DEV_ENV path: $DEV_ENV"
-echo "Debug: Using HOME path: $ORIGINAL_HOME"
-
-# Verify DEV_ENV is a valid directory
-if [ ! -d "$DEV_ENV" ]; then
-  echo "Error: DEV_ENV directory does not exist."
-  echo "Attempted directory: $DEV_ENV"
+if [[ -z "$TARGET_HOME" || ! -d "$TARGET_HOME" ]]; then
+  echo "Error: failed to resolve home directory for $TARGET_USER"
   exit 1
 fi
 
-# Update system
-# Install core packages
-#!/usr/bin/env bash
+run_as_user() {
+  if [[ "$(id -u)" -eq 0 ]]; then
+    sudo -u "$TARGET_USER" HOME="$TARGET_HOME" "$@"
+  else
+    "$@"
+  fi
+}
 
-sudo pacman -S --noconfirm --needed gimp tldr go fzf rofi-wayland
-sudo pacman -S love --noconfirm --needed
-sudo pacman -S ttf-font-awesome waybar ttf-jetbrains-mono-nerd ttf-nerd-fonts-symbols
-sudo pacman -S hyprlock --noconfirm --needed
-sudo pacman -S ghostty
-sudo pacman -S hyprpaper linux-firmware sof-firmware
-paru -Syu wlogout-git --noconfirm --needed
-sudo pacman -S code
-sudo pacman -S --noconfirm neovim lua51 luarocks
-sudo pacman -S swww pywal wofi fd
-sudo pacman -S networkmanager pavucontrol
-sudo pacman -S pipewire wireplumber brightnessctl
-sudo pacman -S pipewire pipewire-pulse pipewire-alsa
-sudo pacman -S keyd
-sudo pacman -S openssh
-sudo pacman -S spotify-launcher
+if ! command -v apt-get >/dev/null 2>&1; then
+  echo "Error: apt-get not found. Install Ubuntu or another apt-based distro first."
+  exit 1
+fi
 
-flatpak install flathub md.obsidian.Obsidian
-flatpak install org.pgadmin.pgadmin4
+echo "Setting up dev environment from: $REPO_ROOT"
 
-wget --output-document /tmp/luarocks.tar.gz https://luarocks.org/releases/luarocks-3.11.0.tar.gz
-tar zxpf /tmp/luarocks.tar.gz -C /tmp
-cd /tmp/luarocks-3.11.0
-./configure && make && sudo make install
+sudo apt-get update
+sudo apt-get install -y \
+  apt-transport-https \
+  bash \
+  bluez \
+  brightnessctl \
+  build-essential \
+  ca-certificates \
+  curl \
+  fd-find \
+  fzf \
+  git \
+  gnupg \
+  golang-go \
+  hyprland \
+  hyprlock \
+  hyprpaper \
+  keyd \
+  lua5.4 \
+  luarocks \
+  network-manager-gnome \
+  neovim \
+  pipewire-audio \
+  pipewire-pulse \
+  playerctl \
+  ripgrep \
+  rofi-wayland \
+  rsync \
+  swww \
+  waybar \
+  wireplumber \
+  wl-clipboard \
+  wget
 
-ln -s /var/lib/flatpak/exports/bin/md.obsidian.Obsidian /usr/bin/Obsidian
-ln -s /var/lib/flatpak/exports/bin/org.pgadmin.pgadmin4 /usr/bin/pgadmin4
+mkdir -p "$TARGET_HOME/.local/bin" "$TARGET_HOME/go/bin"
+chown -R "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.local" "$TARGET_HOME/go" 2>/dev/null || true
 
-git config --global user.email "me@mattwall.dev"
-git config --global user.name "devmwall"
+if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+  ln -sf "$(command -v fdfind)" "$TARGET_HOME/.local/bin/fd"
+  chown -h "$TARGET_USER:$TARGET_USER" "$TARGET_HOME/.local/bin/fd" 2>/dev/null || true
+fi
 
-# Visual Studio Code (VSCode) installation
-rpm --import https://packages.microsoft.com/keys/microsoft.asc
-sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+if ! command -v code >/dev/null 2>&1; then
+  wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /tmp/packages.microsoft.gpg
+  sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /usr/share/keyrings/packages.microsoft.gpg
+  sudo sh -c 'printf "%s\n" "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+  sudo apt-get update
+  sudo apt-get install -y code
+fi
 
-# Create configuration directories
-mkdir -p "$ORIGINAL_HOME/.config/i3"
-mkdir -p "$ORIGINAL_HOME/.config/nvim"
-mkdir -p "$ORIGINAL_HOME/.config/Code/User"
-mkdir -p "$ORIGINAL_HOME/.config/ghostty/"
-mkdir -p "$ORIGINAL_HOME/.config/keyboard/"
-mkdir -p "$ORIGINAL_HOME/.config/hypr/"
+if ! command -v opencode >/dev/null 2>&1; then
+  run_as_user bash -lc 'curl -fsSL https://opencode.ai/install | bash'
+fi
 
-# Copy configuration files with debug output
-echo "Copying i3 config:"
-echo "Source: $DEV_ENV/env/.config/i3/config"
-echo "Destination: $ORIGINAL_HOME/.config/i3/config"
-cp "$DEV_ENV/env/.config/i3/config" "$ORIGINAL_HOME/.config/i3/config"
+"$REPO_ROOT/scripts/apply-config.sh"
 
-echo "Copying neovim config:"
-echo "Source: $DEV_ENV/env/.config/nvim/."
-echo "Destination: $ORIGINAL_HOME/.config/nvim/"
-cp -a "$DEV_ENV/env/.config/nvim/." "$ORIGINAL_HOME/.config/nvim/"
-cp -a "$DEV_ENV/env/.config/hypr/." "$ORIGINAL_HOME/.config/hypr/"
-cp -a "$DEV_ENV/env/.config/wal/." "$ORIGINAL_HOME/.config/wal/"
+if command -v systemctl >/dev/null 2>&1; then
+  sudo systemctl enable --now bluetooth keyd || true
+fi
 
-echo "Copying VSCode settings:"
-echo "Source: $DEV_ENV/env/.config/vscode/settings.json"
-echo "Destination: $ORIGINAL_HOME/.config/Code/User/settings.json"
-cp "$DEV_ENV/env/.config/vscode/settings.json" "$ORIGINAL_HOME/.config/Code/User/settings.json"
+if command -v git >/dev/null 2>&1; then
+  run_as_user git config --global user.email "me@mattwall.dev"
+  run_as_user git config --global user.name "devmwall"
+fi
 
-echo "Copying VSCode keybindings:"
-echo "Source: $DEV_ENV/env/.config/vscode/keybindings.json"
-echo "Destination: $ORIGINAL_HOME/.config/Code/User/keybindings.json"
-cp "$DEV_ENV/env/.config/vscode/keybindings.json" "$ORIGINAL_HOME/.config/Code/User/keybindings.json"
-
-echo "Copying Ghostty config:"
-echo "Source: $DEV_ENV/env/.config/ghostty/config"
-echo "Destination: $ORIGINAL_HOME/.config/ghostty/config"
-cp "$DEV_ENV/env/.config/ghostty/config" "$ORIGINAL_HOME/.config/ghostty/config"
-
-echo "Copying Keyboard config:"
-echo "Source: $DEV_ENV/.config/keyboard/"
-echo "Destination: $ORIGINAL_HOME/.config/keyboard/"
-cp -a "$DEV_ENV/env/.config/keyboard/." "$ORIGINAL_HOME/.config/keyboard/"
-cp -a "$DEV_ENV/env/.config/waybar/." "$ORIGINAL_HOME/.config/waybar/"
-cp -a "$DEV_ENV/env/.config/wal/." "$ORIGINAL_HOME/.config/wal/"
-
-cp -a "$DEV_ENV/env/.local/." "$ORIGINAL_HOME/.local"
-
-chmod +x $ORIGINAL_HOME/.local/scripts/hdmi
-
-# Ensure correct ownership
-chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/i3"
-chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/nvim"
-chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/Code"
-chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/ghostty"
-chown -R $ORIGINAL_USER:$ORIGINAL_USER "$ORIGINAL_HOME/.config/keyboard"
-
-echo "Setup complete!"
+echo "Setup complete."

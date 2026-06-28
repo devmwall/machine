@@ -1,30 +1,22 @@
- Fedora Machine Setup
+# Machine Setup
 
-## Setup Instructions
+## Quick Start
 
-1. Set the DEV_ENV environment variable to the path of this repository
+1. Install the minimal code environment and apply config:
+   ```bash
+   ./setup.sh
    ```
-   export DEV_ENV=/path/to/this/repo
+2. Apply dotfiles/config only:
+   ```bash
+   ./config.sh
+   ```
+3. Back up local config changes back into repo:
+   ```bash
+   ./backup_configs.sh
    ```
 
-2. Run `sudo ./setup.sh` to install packages and configure system
+## Script Layout
 
-3. Run `./backup_configs.sh` to update configs in the repository
-
-### Requirements
-- Sudo access
-- Fedora Linux
-- DEV_ENV environment variable set
-
-### Included Configurations
-- i3 Window Manager
-- Neovim
-- VSCode
-- Tmux
-EOF
-
-# Make scripts executable
-chmod +x setup.sh
-chmod +x backup_configs.sh
-
-echo "Machine setup scripts and configs created successfully!"
+- `setup.sh`: installs Ubuntu dev tooling, Go, Hyprland, Waybar, VS Code, Neovim, Opencode, then applies config.
+- `scripts/apply-config.sh`: syncs repo config into user home.
+- `backup_configs.sh`: syncs local config back into the repo.

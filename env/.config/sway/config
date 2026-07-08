@@ -20,6 +20,9 @@ floating_modifier $mod
 # 1440p laptop panel; adjust live with $mod+plus / $mod+minus (see below).
 output eDP-1 mode 2560x1440 scale 1.5
 
+# Wallpaper (fill = scale/crop to cover the screen).
+output * bg /home/dev/.config/sway/background.jpeg fill
+
 # --- Input -----------------------------------------------------------------
 # Swap Caps Lock and Escape (Caps -> Esc, Esc -> Caps).
 input "type:keyboard" {
@@ -27,11 +30,14 @@ input "type:keyboard" {
 }
 
 # --- Launchers -------------------------------------------------------------
-# Terminal (Ubuntu's built-in terminal).
-bindsym $mod+Return exec ptyxis
+# Terminal (Ubuntu's built-in terminal). --new-window forces a fresh
+# instance instead of ptyxis's default single-instance focus behavior.
+bindsym $mod+Return exec ptyxis --new-window
+bindsym $mod+q exec ptyxis --new-window
 
 # Kill focused window
 bindsym $mod+Shift+q kill
+bindsym $mod+c kill
 
 # Program launcher
 bindsym $mod+d exec wofi --show drun

@@ -26,7 +26,7 @@ sudo apt install -y \
     waybar wofi i3status \
     grim slurp wl-clipboard \
     brightnessctl network-manager-gnome \
-    fonts-jetbrains-mono git curl wget gpg
+    jq fonts-jetbrains-mono git curl wget gpg
 
 # VSCode from Microsoft's official apt repo.
 if ! command -v code >/dev/null 2>&1; then
@@ -44,10 +44,40 @@ fi
 # ---------------------------------------------------------------------------
 # 2. Config files
 # ---------------------------------------------------------------------------
-mkdir -p "$CONFIG/sway" "$CONFIG/Code/User" "$CONFIG/bashrc.d"
+mkdir -p "$CONFIG/sway" "$CONFIG/waybar" "$CONFIG/Code/User" "$CONFIG/bashrc.d"
 
 echo "Installing sway config..."
 cp "$DEV_ENV/env/.config/sway/config" "$CONFIG/sway/config"
+install -m 0755 "$DEV_ENV/env/.config/sway/scale.sh" "$CONFIG/sway/scale.sh"
+
+echo "Installing waybar config..."
+cp "$DEV_ENV/env/.config/waybar/config"    "$CONFIG/waybar/config"
+cp "$DEV_ENV/env/.config/waybar/style.css" "$CONFIG/waybar/style.css"
+
+# JetBrainsMono Nerd Font: waybar's style.css needs it for its icon glyphs,
+# otherwise the bar renders empty boxes. (Ubuntu's plain fonts-jetbrains-mono
+# is not nerd-patched, so we fetch the nerd build.)
+if ! fc-list | grep -qi "JetBrainsMono Nerd Font"; then
+    echo "Installing JetBrainsMono Nerd Font..."
+    NERD_TMP="$(mktemp -d)"
+    if curl -fsSL -o "$NERD_TMP/JetBrainsMono.tar.xz" \
+        https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.tar.xz; then
+        mkdir -p "$HOME/.local/share/fonts/JetBrainsMonoNerd"
+        tar -xf "$NERD_TMP/JetBrainsMono.tar.xz" -C "$HOME/.local/share/fonts/JetBrainsMonoNerd"
+        find "$HOME/.local/share/fonts/JetBrainsMonoNerd" -iname '*Windows Compatible*' -delete 2>/dev/null || true
+        fc-cache -f "$HOME/.local/share/fonts" >/dev/null 2>&1
+    else
+        echo "  (font download failed — skipping; waybar icons may show as boxes)"
+    fi
+    rm -rf "$NERD_TMP"
+fi
+
+# Caps Lock <-> Escape swap for the regular GNOME (Ubuntu) session.
+# The sway session handles this itself via xkb_options in its config.
+if command -v gsettings >/dev/null 2>&1; then
+    echo "Setting Caps<->Esc swap for GNOME..."
+    gsettings set org.gnome.desktop.input-sources xkb-options "['caps:swapescape']" || true
+fi
 
 echo "Installing VSCode settings..."
 cp "$DEV_ENV/env/.config/vscode/settings.json"    "$CONFIG/Code/User/settings.json"

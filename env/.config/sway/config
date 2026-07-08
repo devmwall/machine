@@ -15,10 +15,15 @@ client.focused #77dd77 #285577 #ffffff #2e9ef4 #285577
 # Use Mouse+$mod to drag floating windows.
 floating_modifier $mod
 
+# --- Output ----------------------------------------------------------------
+# Native resolution with fractional scaling. 1.5 is a good middle ground for a
+# 1440p laptop panel; adjust live with $mod+plus / $mod+minus (see below).
+output eDP-1 mode 2560x1440 scale 1.5
+
 # --- Input -----------------------------------------------------------------
-# Replaces the old setxkbmap exec lines: caps -> escape, both shifts -> capslock.
+# Swap Caps Lock and Escape (Caps -> Esc, Esc -> Caps).
 input "type:keyboard" {
-    xkb_options caps:escape,shift:both_capslock
+    xkb_options caps:swapescape
 }
 
 # --- Launchers -------------------------------------------------------------
@@ -109,10 +114,19 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+# --- Display scaling (zoom) ------------------------------------------------
+# $mod+Shift++ / $mod++ to zoom in (bigger UI), $mod+- to zoom out (smaller).
+# Adjusts the focused output's scale in 0.1 steps.
+bindsym $mod+plus        exec ~/.config/sway/scale.sh +0.1
+bindsym $mod+equal       exec ~/.config/sway/scale.sh +0.1
+bindsym $mod+minus       exec ~/.config/sway/scale.sh -0.1
+bindsym $mod+KP_Add      exec ~/.config/sway/scale.sh +0.1
+bindsym $mod+KP_Subtract exec ~/.config/sway/scale.sh -0.1
+
 # --- Media / hardware keys -------------------------------------------------
-bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+bindsym XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+bindsym XF86AudioMute        exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
 bindsym XF86MonBrightnessUp   exec brightnessctl set +5%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 
@@ -120,13 +134,17 @@ bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym Print exec grim -g "$(slurp)" - | wl-copy
 
 # --- Bar -------------------------------------------------------------------
-bar {
-    position top
-    status_command i3status
-    tray_output primary
-}
+# Using waybar (see ~/.config/waybar/{config,style.css}) instead of the
+# default swaybar.
+exec waybar
 
 # --- Autostart -------------------------------------------------------------
+# Make GUI apps launch reliably: hand the Wayland session env to D-Bus and
+# systemd so xdg-desktop-portal and dbus-activated apps can start. Without
+# this, many apps silently fail to open.
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+
 exec nm-applet --indicator
 
 # Launch apps on their workspaces (uncomment as desired):

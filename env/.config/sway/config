@@ -1,0 +1,134 @@
+# Sway config (Ubuntu / Wayland).
+# Derived from env/.config/i3/config so the keybindings match muscle memory,
+# but adapted for Wayland (native input config, ptyxis terminal, wofi launcher).
+# Reference: man 5 sway
+
+set $mod Mod4
+
+# Font for window titles / default bar.
+font pango:monospace 15px
+
+# Borders
+for_window [app_id=".*"] border pixel 2
+client.focused #77dd77 #285577 #ffffff #2e9ef4 #285577
+
+# Use Mouse+$mod to drag floating windows.
+floating_modifier $mod
+
+# --- Input -----------------------------------------------------------------
+# Replaces the old setxkbmap exec lines: caps -> escape, both shifts -> capslock.
+input "type:keyboard" {
+    xkb_options caps:escape,shift:both_capslock
+}
+
+# --- Launchers -------------------------------------------------------------
+# Terminal (Ubuntu's built-in terminal).
+bindsym $mod+Return exec ptyxis
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Program launcher
+bindsym $mod+d exec wofi --show drun
+
+# --- Focus -----------------------------------------------------------------
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# --- Move ------------------------------------------------------------------
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# --- Layout ----------------------------------------------------------------
+bindsym $mod+z split h
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+a focus parent
+
+# --- Workspaces ------------------------------------------------------------
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+bindsym $mod+m move workspace to output left
+
+# --- Session ---------------------------------------------------------------
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes, exit' 'swaymsg exit'
+
+# Resize mode
+mode "resize" {
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
+
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# --- Media / hardware keys -------------------------------------------------
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute        exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86MonBrightnessUp   exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+# Screenshot region to clipboard
+bindsym Print exec grim -g "$(slurp)" - | wl-copy
+
+# --- Bar -------------------------------------------------------------------
+bar {
+    position top
+    status_command i3status
+    tray_output primary
+}
+
+# --- Autostart -------------------------------------------------------------
+exec nm-applet --indicator
+
+# Launch apps on their workspaces (uncomment as desired):
+# exec swaymsg 'workspace 2; exec code'
+# exec swaymsg 'workspace 3; exec ptyxis'

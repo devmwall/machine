@@ -57,7 +57,7 @@ bindsym $mod+Right focus right
 bindsym $mod+Shift+h move left
 bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
-bindsym $mod+Shift+l move right
+# Note: move-right lives on $mod+Shift+Right; $mod+Shift+l is the lock screen.
 
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
@@ -100,6 +100,7 @@ bindsym $mod+Shift+0 move container to workspace 10
 bindsym $mod+m move workspace to output left
 
 # --- Session ---------------------------------------------------------------
+bindsym $mod+Shift+l exec swaylock -f -c 000000
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit sway?' -B 'Yes, exit' 'swaymsg exit'
 
